@@ -64,7 +64,45 @@ client = GitHub.new("ghp_your_token_here")
 
 Functions for managing GitHub Projects v2.
 
-#### Organization-Owned Projects
+#### Projects (List and Retrieve)
+
+```elixir
+# Create a client
+client = GitHub.new("ghp_your_token")
+
+# List all organization projects
+{:ok, response} = GitHub.Projects.Project.list_org_projects(client, "my-org")
+
+# List with pagination
+{:ok, response} = GitHub.Projects.Project.list_org_projects(client, "my-org", per_page: 50)
+
+# Get a specific organization project
+{:ok, response} = GitHub.Projects.Project.get_org_project(client, "my-org", 1)
+
+# List all user projects
+{:ok, response} = GitHub.Projects.Project.list_user_projects(client, "octocat")
+
+# Get a specific user project
+{:ok, response} = GitHub.Projects.Project.get_user_project(client, "octocat", 1)
+```
+
+#### Project Fields
+
+```elixir
+# List all fields for an organization project
+{:ok, response} = GitHub.Projects.Fields.list_org_fields(client, "my-org", 1)
+
+# Get a specific field
+{:ok, response} = GitHub.Projects.Fields.get_org_field(client, "my-org", 1, 12345)
+
+# List all fields for a user project
+{:ok, response} = GitHub.Projects.Fields.list_user_fields(client, "octocat", 1)
+
+# Get a specific field
+{:ok, response} = GitHub.Projects.Fields.get_user_field(client, "octocat", 1, 12345)
+```
+
+#### Project Items (Organization-Owned)
 
 ```elixir
 # Create a client
@@ -123,7 +161,7 @@ client = GitHub.new("ghp_your_token")
 :ok = GitHub.Projects.Org.delete_item(client, "my-org", 1, 789)
 ```
 
-#### User-Owned Projects
+#### Project Items (User-Owned)
 
 The API is identical for user-owned projects, just use `GitHub.Projects.User` instead:
 
@@ -250,7 +288,10 @@ Contributions are welcome! Please feel free to submit a Pull Request.
 ## Roadmap
 
 This client currently supports:
-- ✅ Projects v2 API (organization and user-owned projects)
+- ✅ Projects v2 API
+  - ✅ Projects (list and retrieve)
+  - ✅ Project Fields (list and retrieve)
+  - ✅ Project Items (full CRUD for organization and user-owned projects)
 
 Future additions will include:
 - 🔲 Repositories API
