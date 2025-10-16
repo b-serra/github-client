@@ -9,10 +9,11 @@ defmodule GitHubTest do
       assert client.pre != []
 
       # Check that headers middleware is configured
-      headers_middleware = Enum.find(client.pre, fn
-        {Tesla.Middleware.Headers, :call, _} -> true
-        _ -> false
-      end)
+      headers_middleware =
+        Enum.find(client.pre, fn
+          {Tesla.Middleware.Headers, :call, _} -> true
+          _ -> false
+        end)
 
       assert headers_middleware != nil
     end
@@ -59,10 +60,11 @@ defmodule GitHubTest do
     test "client includes JSON middleware" do
       client = GitHub.new("ghp_test_token")
 
-      json_middleware = Enum.find(client.pre, fn
-        {Tesla.Middleware.JSON, :call, _} -> true
-        _ -> false
-      end)
+      json_middleware =
+        Enum.find(client.pre, fn
+          {Tesla.Middleware.JSON, :call, _} -> true
+          _ -> false
+        end)
 
       assert json_middleware != nil
     end
@@ -70,10 +72,11 @@ defmodule GitHubTest do
     test "client includes BaseUrl middleware" do
       client = GitHub.new("ghp_test_token")
 
-      base_url_middleware = Enum.find(client.pre, fn
-        {Tesla.Middleware.BaseUrl, :call, ["https://api.github.com"]} -> true
-        _ -> false
-      end)
+      base_url_middleware =
+        Enum.find(client.pre, fn
+          {Tesla.Middleware.BaseUrl, :call, ["https://api.github.com"]} -> true
+          _ -> false
+        end)
 
       assert base_url_middleware != nil
     end
@@ -96,10 +99,11 @@ defmodule GitHubTest do
       client = GitHub.new("ghp_test_token")
 
       # Find the headers middleware
-      {_, _, [headers]} = Enum.find(client.pre, fn
-        {Tesla.Middleware.Headers, :call, _} -> true
-        _ -> false
-      end)
+      {_, _, [headers]} =
+        Enum.find(client.pre, fn
+          {Tesla.Middleware.Headers, :call, _} -> true
+          _ -> false
+        end)
 
       assert {"accept", "application/vnd.github+json"} in headers
       assert {"authorization", "Bearer ghp_test_token"} in headers
@@ -114,10 +118,11 @@ defmodule GitHubTest do
       # Direct token should take precedence
       client = GitHub.new("ghp_direct_token")
 
-      {_, _, [headers]} = Enum.find(client.pre, fn
-        {Tesla.Middleware.Headers, :call, _} -> true
-        _ -> false
-      end)
+      {_, _, [headers]} =
+        Enum.find(client.pre, fn
+          {Tesla.Middleware.Headers, :call, _} -> true
+          _ -> false
+        end)
 
       assert {"authorization", "Bearer ghp_direct_token"} in headers
 
@@ -132,10 +137,11 @@ defmodule GitHubTest do
 
       client = GitHub.new()
 
-      {_, _, [headers]} = Enum.find(client.pre, fn
-        {Tesla.Middleware.Headers, :call, _} -> true
-        _ -> false
-      end)
+      {_, _, [headers]} =
+        Enum.find(client.pre, fn
+          {Tesla.Middleware.Headers, :call, _} -> true
+          _ -> false
+        end)
 
       assert {"authorization", "Bearer ghp_env_token"} in headers
 

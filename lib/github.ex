@@ -32,6 +32,15 @@ defmodule GitHub do
       # Create a client
       client = GitHub.new("ghp_your_token")
 
+      # Projects API - List all organization projects
+      {:ok, response} = GitHub.Projects.Project.list_org_projects(client, "my-org")
+
+      # Projects API - Get a specific project
+      {:ok, response} = GitHub.Projects.Project.get_org_project(client, "my-org", 1)
+
+      # Projects API - List project fields
+      {:ok, response} = GitHub.Projects.Fields.list_org_fields(client, "my-org", 1)
+
       # Projects API - List items in an organization project
       {:ok, items} = GitHub.Projects.Org.list_items(client, "my-org", 1)
       # items is a list of %GitHub.Projects.ProjectItem{} structs
@@ -51,8 +60,11 @@ defmodule GitHub do
 
   ## Available API Modules
 
-  - `GitHub.Projects.Org` - Organization-owned project items
-  - `GitHub.Projects.User` - User-owned project items
+  ### Projects (v2)
+  - `GitHub.Projects.Project` - List and retrieve projects for organizations and users
+  - `GitHub.Projects.Fields` - Manage project fields (custom properties)
+  - `GitHub.Projects.Org` - Organization-owned project items (CRUD operations)
+  - `GitHub.Projects.User` - User-owned project items (CRUD operations)
   """
 
   use Tesla
@@ -81,11 +93,12 @@ defmodule GitHub do
 
     middleware = [
       {Tesla.Middleware.BaseUrl, @base_url},
-      {Tesla.Middleware.Headers, [
-        {"accept", "application/vnd.github+json"},
-        {"authorization", "Bearer #{auth_token}"},
-        {"x-github-api-version", @api_version}
-      ]},
+      {Tesla.Middleware.Headers,
+       [
+         {"accept", "application/vnd.github+json"},
+         {"authorization", "Bearer #{auth_token}"},
+         {"x-github-api-version", @api_version}
+       ]},
       Tesla.Middleware.JSON
     ]
 
