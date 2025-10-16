@@ -9,13 +9,15 @@ defmodule GitHub.Projects.OrgTest do
   setup do
     # Mock adapter is configured globally for test environment
     # Create a test client matching the production setup
-    client = Tesla.client(
-      [
-        {Tesla.Middleware.BaseUrl, "https://api.github.com"},
-        Tesla.Middleware.JSON
-      ],
-      Tesla.Mock
-    )
+    client =
+      Tesla.client(
+        [
+          {Tesla.Middleware.BaseUrl, "https://api.github.com"},
+          Tesla.Middleware.JSON
+        ],
+        Tesla.Mock
+      )
+
     {:ok, client: client}
   end
 
@@ -101,7 +103,8 @@ defmodule GitHub.Projects.OrgTest do
           json(Fixtures.error_response(403, "Forbidden"), status: 403)
       end)
 
-      assert {:error, %{status: 403}} = Org.add_item(client, "test-org", 1, %{type: "Issue", id: 123})
+      assert {:error, %{status: 403}} =
+               Org.add_item(client, "test-org", 1, %{type: "Issue", id: 123})
     end
   end
 
@@ -135,9 +138,11 @@ defmodule GitHub.Projects.OrgTest do
           json(Fixtures.project_item_response(), status: 200)
       end)
 
-      assert {:ok, item} = Org.update_item(client, "test-org", 1, 123, %{
-        fields: [%{id: 101, value: "Done"}]
-      })
+      assert {:ok, item} =
+               Org.update_item(client, "test-org", 1, 123, %{
+                 fields: [%{id: 101, value: "Done"}]
+               })
+
       assert %ProjectItem{} = item
     end
 
@@ -147,13 +152,15 @@ defmodule GitHub.Projects.OrgTest do
           json(Fixtures.project_item_response(), status: 200)
       end)
 
-      assert {:ok, item} = Org.update_item(client, "test-org", 1, 123, %{
-        fields: [
-          %{id: 101, value: "In Progress"},
-          %{id: 102, value: 42},
-          %{id: 103, value: nil}
-        ]
-      })
+      assert {:ok, item} =
+               Org.update_item(client, "test-org", 1, 123, %{
+                 fields: [
+                   %{id: 101, value: "In Progress"},
+                   %{id: 102, value: 42},
+                   %{id: 103, value: nil}
+                 ]
+               })
+
       assert %ProjectItem{} = item
     end
 
@@ -168,9 +175,10 @@ defmodule GitHub.Projects.OrgTest do
           json(Fixtures.error_response(422, "Validation failed"), status: 422)
       end)
 
-      assert {:error, %{status: 422}} = Org.update_item(client, "test-org", 1, 123, %{
-        fields: [%{id: 999, value: "invalid"}]
-      })
+      assert {:error, %{status: 422}} =
+               Org.update_item(client, "test-org", 1, 123, %{
+                 fields: [%{id: 999, value: "invalid"}]
+               })
     end
   end
 

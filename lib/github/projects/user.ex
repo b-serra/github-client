@@ -71,7 +71,8 @@ defmodule GitHub.Projects.User do
       iex> GitHub.Projects.User.add_item(client, "octocat", 1, %{type: "PullRequest", id: 456})
       {:ok, %GitHub.Projects.ProjectItem{...}}
   """
-  def add_item(client, username, project_number, %{type: type, id: id}) when type in ["Issue", "PullRequest"] do
+  def add_item(client, username, project_number, %{type: type, id: id})
+      when type in ["Issue", "PullRequest"] do
     body = %{
       "type" => type,
       "id" => id
@@ -83,7 +84,8 @@ defmodule GitHub.Projects.User do
   end
 
   def add_item(_client, _username, _project_number, item) do
-    {:error, "Invalid item. Must include 'type' (Issue or PullRequest) and 'id' fields. Got: #{inspect(item)}"}
+    {:error,
+     "Invalid item. Must include 'type' (Issue or PullRequest) and 'id' fields. Got: #{inspect(item)}"}
   end
 
   @doc """
@@ -150,7 +152,8 @@ defmodule GitHub.Projects.User do
       ...> })
       {:ok, %GitHub.Projects.ProjectItem{...}}
   """
-  def update_item(client, username, project_number, item_id, %{fields: fields}) when is_list(fields) do
+  def update_item(client, username, project_number, item_id, %{fields: fields})
+      when is_list(fields) do
     body = %{"fields" => fields}
 
     client
@@ -195,12 +198,14 @@ defmodule GitHub.Projects.User do
     |> Enum.into(%{})
   end
 
-  defp handle_response({:ok, %Tesla.Env{status: status, body: body}}, :list) when status in 200..299 do
+  defp handle_response({:ok, %Tesla.Env{status: status, body: body}}, :list)
+       when status in 200..299 do
     items = if is_list(body), do: body, else: [body]
     {:ok, ProjectItem.new_list(items)}
   end
 
-  defp handle_response({:ok, %Tesla.Env{status: status, body: body}}, :single) when status in 200..299 do
+  defp handle_response({:ok, %Tesla.Env{status: status, body: body}}, :single)
+       when status in 200..299 do
     {:ok, ProjectItem.new(body)}
   end
 

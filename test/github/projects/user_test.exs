@@ -9,13 +9,15 @@ defmodule GitHub.Projects.UserTest do
   setup do
     # Mock adapter is configured globally for test environment
     # Create a test client matching the production setup
-    client = Tesla.client(
-      [
-        {Tesla.Middleware.BaseUrl, "https://api.github.com"},
-        Tesla.Middleware.JSON
-      ],
-      Tesla.Mock
-    )
+    client =
+      Tesla.client(
+        [
+          {Tesla.Middleware.BaseUrl, "https://api.github.com"},
+          Tesla.Middleware.JSON
+        ],
+        Tesla.Mock
+      )
+
     {:ok, client: client}
   end
 
@@ -95,7 +97,8 @@ defmodule GitHub.Projects.UserTest do
           json(%{"message" => "API rate limit exceeded"}, status: 429)
       end)
 
-      assert {:error, %{status: 429}} = User.add_item(client, "octocat", 1, %{type: "Issue", id: 1})
+      assert {:error, %{status: 429}} =
+               User.add_item(client, "octocat", 1, %{type: "Issue", id: 1})
     end
   end
 
@@ -129,9 +132,11 @@ defmodule GitHub.Projects.UserTest do
           json(Fixtures.project_item_response(), status: 200)
       end)
 
-      assert {:ok, item} = User.update_item(client, "octocat", 1, 456, %{
-        fields: [%{id: 1, value: "Complete"}]
-      })
+      assert {:ok, item} =
+               User.update_item(client, "octocat", 1, 456, %{
+                 fields: [%{id: 1, value: "Complete"}]
+               })
+
       assert %ProjectItem{} = item
     end
 
@@ -141,9 +146,11 @@ defmodule GitHub.Projects.UserTest do
           json(Fixtures.project_item_response(), status: 200)
       end)
 
-      assert {:ok, item} = User.update_item(client, "octocat", 1, 456, %{
-        fields: [%{id: 5, value: nil}]
-      })
+      assert {:ok, item} =
+               User.update_item(client, "octocat", 1, 456, %{
+                 fields: [%{id: 5, value: nil}]
+               })
+
       assert %ProjectItem{} = item
     end
 
@@ -158,9 +165,10 @@ defmodule GitHub.Projects.UserTest do
           json(Fixtures.error_response(404, "Not Found"), status: 404)
       end)
 
-      assert {:error, %{status: 404}} = User.update_item(client, "octocat", 1, 999, %{
-        fields: [%{id: 1, value: "test"}]
-      })
+      assert {:error, %{status: 404}} =
+               User.update_item(client, "octocat", 1, 999, %{
+                 fields: [%{id: 1, value: "test"}]
+               })
     end
   end
 
