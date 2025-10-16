@@ -63,4 +63,105 @@ defmodule GitHub.Test.Fixtures do
       "documentation_url" => "https://docs.github.com/rest"
     }
   end
+
+  def project_response do
+    %{
+      "id" => 2,
+      "node_id" => "MDc6UHJvamVjdDEwMDI2MDM=",
+      "owner" => %{
+        "login" => "octocat",
+        "id" => 1,
+        "node_id" => "MDQ6VXNlcjE=",
+        "type" => "User"
+      },
+      "creator" => %{
+        "login" => "octocat",
+        "id" => 1,
+        "node_id" => "MDQ6VXNlcjE="
+      },
+      "title" => "My Projects",
+      "description" => "A board to manage my personal projects.",
+      "public" => true,
+      "closed_at" => nil,
+      "created_at" => "2011-04-10T20:09:31Z",
+      "updated_at" => "2014-03-03T18:58:10Z",
+      "number" => 2,
+      "short_description" => nil,
+      "deleted_at" => nil,
+      "deleted_by" => nil,
+      "state" => "open",
+      "is_template" => false
+    }
+  end
+
+  def project_list_response do
+    [
+      project_response(),
+      %{
+        "id" => 3,
+        "node_id" => "MDc6UHJvamVjdDEwMDI2MDQ=",
+        "owner" => %{"login" => "octocat", "id" => 1},
+        "creator" => %{"login" => "octocat", "id" => 1},
+        "title" => "Another Project",
+        "description" => "Second project",
+        "public" => true,
+        "number" => 3,
+        "state" => "open",
+        "created_at" => "2012-04-10T20:09:31Z",
+        "updated_at" => "2015-03-03T18:58:10Z"
+      }
+    ]
+  end
+
+  def project_field_response do
+    %{
+      "id" => 12345,
+      "node_id" => "PVTF_lADOABCD1234567890",
+      "name" => "Priority",
+      "data_type" => "single_select",
+      "project_url" => "https://api.github.com/projects/67890",
+      "options" => [
+        %{
+          "id" => "option_1",
+          "name" => "Low",
+          "color" => "GREEN",
+          "description" => "Low priority items"
+        },
+        %{
+          "id" => "option_2",
+          "name" => "Medium",
+          "color" => "YELLOW",
+          "description" => "Medium priority items"
+        },
+        %{
+          "id" => "option_3",
+          "name" => "High",
+          "color" => "RED",
+          "description" => "High priority items"
+        }
+      ],
+      "created_at" => "2022-04-28T12:00:00Z",
+      "updated_at" => "2022-04-28T12:00:00Z"
+    }
+  end
+
+  def project_fields_list_response do
+    [
+      project_field_response(),
+      %{
+        "id" => 12346,
+        "node_id" => "PVTF_lADOABCD1234567891",
+        "name" => "Status",
+        "data_type" => "single_select",
+        "project_url" => "https://api.github.com/projects/67890",
+        "options" => [
+          %{"id" => "todo", "name" => "Todo"},
+          %{"id" => "in_progress", "name" => "In Progress"},
+          %{"id" => "done", "name" => "Done"}
+        ],
+        "created_at" => "2022-04-28T12:00:00Z",
+        "updated_at" => "2022-04-28T12:00:00Z"
+      }
+    ]
+  end
 end
