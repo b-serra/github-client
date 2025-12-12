@@ -87,6 +87,55 @@ defmodule GitHub.Projects.Org do
   end
 
   @doc """
+  Adds a draft issue to an organization-owned project.
+
+  Draft issues are items that exist only within the project and are not linked
+  to a repository. They can later be converted to regular issues if needed.
+
+  ## Parameters
+    - `client`: Tesla client from `GitHub.new/1`
+    - `org`: The organization name
+    - `project_number`: The project's number
+    - `item`: Map with draft issue details
+      - `title` (required): The title of the draft issue
+      - `body` (optional): The body/description of the draft issue
+
+  ## Returns
+    - `{:ok, %ProjectItem{}}` - Success with created draft item
+    - `{:error, reason}` - Error response
+
+  ## Examples
+
+      iex> GitHub.Projects.Org.add_draft_item(client, "my-org", 1, %{title: "New feature"})
+      {:ok, %GitHub.Projects.ProjectItem{id: 17, content_type: "DraftIssue", ...}}
+
+      iex> GitHub.Projects.Org.add_draft_item(client, "my-org", 1, %{title: "Bug fix", body: "Fix the login issue"})
+      {:ok, %GitHub.Projects.ProjectItem{...}}
+  """
+  def add_draft_item(client, org, project_number, %{title: title} = item) do
+    body =
+      %{
+        "type" => "DraftIssue",
+        "title" => title
+      }
+      |> maybe_add_body(item)
+
+    client
+    |> Tesla.post("/orgs/#{org}/projectsV2/#{project_number}/items", body)
+    |> handle_response(:single)
+  end
+
+  def add_draft_item(_client, _org, _project_number, item) do
+    {:error, "Invalid draft item. Must include 'title' field. Got: #{inspect(item)}"}
+  end
+
+  defp maybe_add_body(body, %{body: item_body}) when is_binary(item_body) and item_body != "" do
+    Map.put(body, "body", item_body)
+  end
+
+  defp maybe_add_body(body, _item), do: body
+
+  @doc """
   Gets a specific item from an organization-owned project.
 
   ## Parameters

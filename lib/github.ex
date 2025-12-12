@@ -58,6 +58,13 @@ defmodule GitHub do
       })
       # updated_item is a %GitHub.Projects.ProjectItem{} struct
 
+      # Projects API - Add a draft issue to a project (not linked to any repository)
+      {:ok, draft} = GitHub.Projects.Org.add_draft_item(client, "my-org", 1, %{
+        title: "New task",
+        body: "Description of the task"
+      })
+      # draft is a %GitHub.Projects.ProjectItem{} struct with content_type: "DraftIssue"
+
   ## Available API Modules
 
   ### Projects (v2)
